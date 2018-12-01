@@ -5,7 +5,7 @@ init()
 # class that handles everything related to the player
 class Player:
 
-    def __init__(self, x, y, suddenDeath, disco, color, radius):
+    def __init__(self, x, y, suddenDeath, color, radius):
         # directions is a list containing states for moving up, down, left or right
         # speed is thepllayers speed constant (subject to change if upgrades are implemented)
         # x and y are thepllayers technical x and yplosition value, but they do not represent the hitbox. Think of them as theplosition of the top-left corner of the IMAGE for thepllayer.
@@ -41,10 +41,10 @@ class Player:
     def update(self, enemy, enemyBullets):
         # if any direction states are true, movespllayer in said direction using self.speed
         if self.directions[0]:
-            if 0 < self.center_y:
+            if 0 < self.y:
                 self.y -= self.speed
         if self.directions[1]:
-            if self.center_y < 700:
+            if self.y < 700:
                 self.y += self.speed
         if self.directions[2]:
             if 0 < self.x:
@@ -53,10 +53,9 @@ class Player:
             if self.x < 1000:
                 self.x += self.speed
                 # update hitBox and muzzle x/y
-        self.x, self.center_y = self.x + self.hitbox_w // 2, self.y + self.hitbox_h // 2
-        self.hitbox = Rect(self.x - 20, self.center_y - 20, 40, 40)
+
+        self.hitbox = Rect(self.x - 20, self.y - 20, 40, 40)
         # updates mouse x and y interpretation
-        self.mouse_x, self.mouse_y = mouse_x, mouse_y
 
         # check if any enemy bullets show the player
         for b in enemyBullets:
@@ -120,6 +119,7 @@ class Bullet:
         self.boundX = boundX
         self.boundY = boundY
         self.radius = radius
+        self.color = color
 
     def update(self):
         # Increases Progress of the bullet
@@ -138,10 +138,10 @@ class Bullet:
     def check(self, enemy):
         # Checks if the bullet is out of range, then deletes it, if it is
         if self.prog >= self.rnge:
-            self.list.remove(self)
+            return True
         # checks if bullets are out of bounds
-        elif not 0 < self.x < self.boundX - self.w or not 0 < self.y < self.boundY - self.h:
-            self.list.remove(self)
+        elif not 0 < self.x < self.boundX or not 0 < self.y < self.boundY:
+            return True
 
         else:
             # checks if bullet hits target hitbox, if so, starts a timer that kills the bullet after 1 frame
@@ -149,7 +149,7 @@ class Bullet:
                     self.deathTick += 1
 
             if self.deathTick > 1:
-                self.list.remove(self)
+                return True
 
     # draws each bullet
     def draw(self, screen):

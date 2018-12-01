@@ -13,12 +13,12 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
     ORANGE = (253,102,0)
     BLUE = (0,120,255)
 
-    background = image.load("TODO").convert_alpha()
-    fontGeneral = font.Font('resources/fonts/Calibri.ttf', 30)
+    background = image.load(random.choice(['Images/Map #1 1000.png', 'Images/Map #2 1000.png', 'Images/Map #3 1000.png'])).convert_alpha()
+    fontGeneral = font.Font('Calibri.ttf', 30)
 
-    intro = [image.load().convert_alpha(), image.load().convert_alpha(), image.load().convert_alpha(), image.load().convert_alpha()]
+    intro = [image.load('Images/1.png').convert_alpha(), image.load('Images/2.png').convert_alpha(), image.load('Images/3.png').convert_alpha(), image.load('Images/GO.png').convert_alpha()]
     radius = 25
-    bulletRadius = 25
+    bulletRadius = 10
     firingSpeed = 333
 
     running = True
@@ -31,7 +31,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
     startTicks1 = 0
     wins1 = 0
 
-    player2 = entities.Player(250, 350, suddenDeath, BLUE, radius)
+    player2 = entities.Player(750, 350, suddenDeath, BLUE, radius)
     player2Bullets = []
     player2gun = [False, False, False, False]
     startTicks2 = 0
@@ -40,7 +40,9 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
 
     bulletDirectionsX = [0, 0, -10, 10]
 
-    bulletDirectionsY = [10, -10, 0, 0]
+    bulletDirectionsY = [-10, 10, 0, 0]
+
+
 
     screen.blit(background, (0,0))
 
@@ -52,7 +54,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
 
     for photo in intro:
 
-        screen.blit(photo, ((boundX/2)-(photo.get_width/2)), ((boundY/2)-(photo.get_height/2)))
+        screen.blit(photo, (int((boundX/2)-(photo.get_width()/2)), int((boundY/2)-(photo.get_height()/2))))
         display.flip()
         time.wait(2000)
 
@@ -125,6 +127,24 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                     if evnt.key == K_b:
                         player1gun[3] = False
 
+                    if evnt.key == K_i:
+                        player2.directions[0] = False
+                    if evnt.key == K_k:
+                        player2.directions[1] = False
+                    if evnt.key == K_j:
+                        player2.directions[2] = False
+                    if evnt.key == K_l:
+                        player2.directions[3] = False
+
+                    if evnt.key == K_UP:
+                        player2gun[0] = False
+                    if evnt.key == K_DOWN:
+                        player2gun[1] = False
+                    if evnt.key == K_LEFT:
+                        player2gun[2] = False
+                    if evnt.key == K_RIGHT:
+                        player2gun[3] = False
+
         for dir in range(len(player1gun)):
             if player1gun[dir]:
                 if time.get_ticks() - startTicks1 > firingSpeed:
@@ -142,7 +162,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                         player1.show = 30
 
                     player2.show = 30
-                    player1Bullets.append(entities.Bullet(player2.x, player2.y, player2.x + bulletDirectionsX[dir], player2.y + bulletDirectionsY[dir], player1, player2Bullets, BLUE, bulletRadius, boundX, boundY))
+                    player2Bullets.append(entities.Bullet(player2.x, player2.y, player2.x + bulletDirectionsX[dir], player2.y + bulletDirectionsY[dir], player1, player2Bullets, BLUE, bulletRadius, boundX, boundY))
                     startTicks2 = time.get_ticks()
 
         player1.update(player2, player2Bullets)
@@ -156,13 +176,15 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
         for bullet in player1Bullets:
 
             bullet.update()
-            bullet.check(player2)
+            if bullet.check(player2):
+                player1Bullets.remove(bullet)
             bullet.draw(screen)
 
         for bullet in player2Bullets:
 
             bullet.update()
-            bullet.check(player1)
+            if bullet.check(player1):
+                player2Bullets.remove(bullet)
             bullet.draw(screen)
 
 
@@ -217,7 +239,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                 display.flip()
                 time.wait(2000)
 
-                return 1
+                return "MAIN"
 
             elif wins2 >=3:
 
@@ -229,7 +251,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                 display.flip()
                 time.wait(2000)
 
-                return 1
+                return "MAIN"
 
 
 

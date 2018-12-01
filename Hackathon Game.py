@@ -1,7 +1,8 @@
 import os 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" %(0, 0) #sets screen to top left corner
 
-from pygame import * 
+from pygame import *
+import local
 
 init()
 size = width, height = 1000, 700
@@ -27,71 +28,71 @@ buttonList = [Rect(350, 150, 300, 100), Rect(350, 300, 300, 100),
 # method to display the main menu
 def drawMenu(mousebox):
     if state == 'MAIN':
-        mainMenuBackground = image.load("Main Background.png")         
+        mainMenuBackground = image.load("Images/Main Background.png")
         screen.blit(mainMenuBackground, Rect(0, 0, width, height))
         
-        logo = image.load("Logo.png")         
+        logo = image.load("Images/Vanish Rivals Logo 2000.png")
         #screen.blit(logo, Rect(300, 0, 300, 200))
         logoTransformed = transform.scale(logo, (300, 300))
         screen.blit(logoTransformed, (350, 0))        
         
         #for displaying the local box
         draw.rect(screen, WHITE, buttonList[1])
-        localButton = image.load("Local Button.png")         
+        localButton = image.load("Images/Local Button.png")
         screen.blit(localButton, Rect(350, 300, 300, 100))        
         
         #for displaying the online box
         draw.rect(screen, WHITE, buttonList[2])
-        onlineButton = image.load("Online Button.png")         
+        onlineButton = image.load("Images/Online Button.png")
         screen.blit(onlineButton, Rect(350, 450, 300, 100))   
         
         # for displaying the quit box
         draw.rect(screen, WHITE, buttonList[3])
-        quitButton = image.load("Quit Button.png")         
+        quitButton = image.load("Images/Quit Button.png")
         screen.blit(quitButton, Rect(350, 600, 300, 100))         
     
     elif state == 'LOCAL':
-        localBackground = image.load("Local Background.png")         
+        localBackground = image.load("Images/Local Background.png")
         screen.blit(localBackground, Rect(0, 0, width, height))       
                     
         # for displaying the easy local box
         draw.rect(screen, WHITE, buttonList[0])
-        easyButton = image.load("Easy Button.png")         
+        easyButton = image.load("Images/Easy Button.png")
         screen.blit(easyButton, buttonList[0])         
         
         #for displaying the hard local box
         draw.rect(screen, WHITE, buttonList[1])
-        hardButton = image.load("Hard Button.png")         
+        hardButton = image.load("Images/Hard Button.png")
         screen.blit(hardButton, buttonList[1])          
         
         # for displaying the local disco box
         draw.rect(screen, WHITE, buttonList[2])
-        discoButton = image.load("Disco Button.png")         
+        discoButton = image.load("Images/Disco Button.png")
         screen.blit(discoButton, buttonList[2])          
     
     elif state == 'ONLINE':
-        onlineBackground = image.load("Online Background.png")         
+        onlineBackground = image.load("Images/Online Background.png")
         screen.blit(onlineBackground, Rect(0, 0, width, height))
         
         # for displaying the easy online box
         draw.rect(screen, WHITE, buttonList[0])
-        easyButton = image.load("Easy Button.png")         
+        easyButton = image.load("Images/Easy Button.png")
         screen.blit(easyButton, buttonList[0])         
             
         
         #for displaying the normal online box
         draw.rect(screen, WHITE, buttonList[1])
-        normalButton = image.load("Normal Button.png")         
+        normalButton = image.load("Images/Normal Button.png")
         screen.blit(normalButton, buttonList[1])        
         
-        # for displaying the hard online box
+        #s for displaying the hard online box
         draw.rect(screen, WHITE, buttonList[2])
-        hardButton = image.load("Hard Button.png")         
+        hardButton = image.load("Images/Hard Button.png")
         screen.blit(hardButton, buttonList[2])         
         
         # for displaying the online disco box
         draw.rect(screen, WHITE, buttonList[3]) 
-        discoButton = image.load("Disco Button.png")         
+        discoButton = image.load("Images/Disco Button.png")
         screen.blit(discoButton, buttonList[3])          
 
 while running: # do as long as running is true
@@ -115,8 +116,10 @@ while running: # do as long as running is true
                 elif state == 'LOCAL':
                     if buttonList[0].colliderect(mousebox):
                         state = 'LOCALEASY'
+                        state = local.game(0, False, 1000, 700, screen)
                     elif buttonList[1].colliderect(mousebox):
                         state = 'LOCALHARD'
+                        state = local.game(1, False, 1000, 700, screen)
                     elif buttonList[2].colliderect(mousebox):
                         state = 'LOCALDISCO'
                         
