@@ -5,7 +5,7 @@ init()
 # class that handles everything related to the player
 class Player:
 
-    def __init__(self, mouse_x, mouse_y, x, y, suddenDeath, color, radius):
+    def __init__(self, x, y, suddenDeath, disco, color, radius):
         # directions is a list containing states for moving up, down, left or right
         # speed is thepllayers speed constant (subject to change if upgrades are implemented)
         # x and y are thepllayers technical x and yplosition value, but they do not represent the hitbox. Think of them as theplosition of the top-left corner of the IMAGE for thepllayer.
@@ -14,18 +14,18 @@ class Player:
         # rect is the box of the IMAGE for thepllayer, it does not represent the hitbox.
         # hitbox w and h are the Height and Width of the hitbox for the player. they are constant.
         # center x and y represent the middle of the box of the IMAGE for thepllayer.
-        # hitbox is what the enemy is going to want to hit in order to lower thepllayers' health. it's dimensions are constant, but it moves with thepllayer.
+        # hitbox is what the enemy is going to want to show in order to lower thepllayers' health. it's dimensions are constant, but it moves with thepllayer.
         self.directions = [False, False, False, False]
         self.x = x
         self.y = y
         self.color = color
         self.radius = radius
-        self.mouse_x, self.mouse_y = mouse_x, mouse_y
         self.hitbox_side = int(sqrt(2) * (radius*2) / 2)
         self.hitbox = Rect(self.x - self.hitbox_side, self.y - self.hitbox_side, self.hitbox_side,
                            self.hitbox_side)
 
         self.sd = suddenDeath
+        self.show = 0
 
         # player stats
         self.gun = 1
@@ -58,10 +58,11 @@ class Player:
         # updates mouse x and y interpretation
         self.mouse_x, self.mouse_y = mouse_x, mouse_y
 
-        # check if any enemy bullets hit the player
+        # check if any enemy bullets show the player
         for b in enemyBullets:
             if self.hitbox.colliderect(b.rect):
                 self.health -= b.dmg
+                self.show = 120
 
         if self.hitbox.colliderect(enemy.hitbox):
             try:
