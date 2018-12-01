@@ -38,7 +38,7 @@ class Player:
             self.health = 1
 
     # handles movement and health of player
-    def update(self, mouse_x, mouse_y, enemy, enemyBullets):
+    def update(self, enemy, enemyBullets):
         # if any direction states are true, movespllayer in said direction using self.speed
         if self.directions[0]:
             if 0 < self.center_y:
