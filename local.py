@@ -13,7 +13,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
     ORANGE = (253,102,0)
     BLUE = (0,120,255)
 
-    background = image.load(random.choice(['Images/Map #1 1000.png', 'Images/Map #2 1000.png', 'Images/Map #3 1000.png'])).convert_alpha()
+    background = image.load(random.choice(['Images/Map #1 1000.png', 'Images/Map #2 1000.png'])).convert_alpha()
     fontGeneral = font.Font('Calibri.ttf', 30)
 
     intro = [image.load('Images/1.png').convert_alpha(), image.load('Images/2.png').convert_alpha(), image.load('Images/3.png').convert_alpha(), image.load('Images/GO.png').convert_alpha()]
@@ -22,6 +22,7 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
     firingSpeed = 333
 
     running = True
+    myClock = time.Clock()
 
     controls = True
 
@@ -43,7 +44,6 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
     bulletDirectionsY = [-10, 10, 0, 0]
 
 
-
     screen.blit(background, (0,0))
 
     player1.draw(screen)
@@ -56,8 +56,10 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
 
         screen.blit(photo, (int((boundX/2)-(photo.get_width()/2)), int((boundY/2)-(photo.get_height()/2))))
         display.flip()
-        time.wait(2000)
+        time.wait(1000)
 
+    player2.show = 60
+    player1.show = 60
 
     while running:
 
@@ -208,16 +210,18 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
 
             player2.show -= 2
 
-            text = fontGeneral.render(str(wins1), 1, ORANGE)
-            screen.blit(text, (30, boundY - 45, 40, 40))
+        text = fontGeneral.render(str(wins1), 1, ORANGE)
+        screen.blit(text, (30, boundY - 45, 40, 40))
 
-            text = fontGeneral.render(str(wins2), 1, BLUE)
-            screen.blit(text, (boundX - 30, boundY - 45, 40, 40))
+        text = fontGeneral.render(str(wins2), 1, BLUE)
+        screen.blit(text, (boundX - 30, boundY - 45, 40, 40))
 
 
 
         if player2.health <= 0 or player1.health <= 0:
 
+            player1Bullets = []
+            player2Bullets = []
             controls = False
 
             screen.blit(background, (0, 0))
@@ -226,18 +230,28 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                 player2.draw(screen)
 
                 wins2 += 1
+                player1.health = 1
 
             else:
                 player1.draw(screen)
                 wins1 += 1
+                player2.health = 1
 
             if wins1 >= 3:
 
                 text = fontGeneral.render("Player 1 wins!", 1, ORANGE)
                 screen.blit(text, Rect((boundX/2)-(text.get_width()/2), (boundY/2)-(text.get_height()/2), text.get_width(), text.get_height()))
 
+                text = fontGeneral.render(str(wins1), 1, ORANGE)
+                screen.blit(text, (30, boundY - 45, 40, 40))
+
+                text = fontGeneral.render(str(wins2), 1, BLUE)
+                screen.blit(text, (boundX - 30, boundY - 45, 40, 40))
+
                 display.flip()
                 time.wait(2000)
+
+
 
                 return "MAIN"
 
@@ -247,15 +261,23 @@ def game(difficulty, suddenDeath, boundX, boundY, screen):
                 screen.blit(text, Rect((boundX / 2) - (text.get_width() / 2), (boundY / 2) - (text.get_height() / 2),
                                        text.get_width(), text.get_height()))
 
+                text = fontGeneral.render(str(wins1), 1, ORANGE)
+                screen.blit(text, (30, boundY - 45, 40, 40))
+
+                text = fontGeneral.render(str(wins2), 1, BLUE)
+                screen.blit(text, (boundX - 30, boundY - 45, 40, 40))
 
                 display.flip()
                 time.wait(2000)
 
+
+
                 return "MAIN"
 
+            controls = True
 
-
-
+        print(wins1, wins2)
+        myClock.tick(60)
         display.flip()
 
 
